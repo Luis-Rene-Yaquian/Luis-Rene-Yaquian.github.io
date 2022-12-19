@@ -5,7 +5,7 @@ class Nodo{
     }
 }
 
-class Lista{
+export default class Lista{
     constructor(){
         this.head = null
     }
@@ -27,12 +27,12 @@ class Lista{
     }
 }
 
-var lista = new Lista();
-lista.insert("Pikachu")
-lista.insert("Lapras")
-lista.insert("Shinx")
-lista.insert("Charmander")
-lista.insert("Vulpix")
-lista.insert("Snorlax")
+// var lista = new Lista();
+// lista.insert("Pikachu")
+// lista.insert("Lapras")
+// lista.insert("Shinx")
+// lista.insert("Charmander")
+// lista.insert("Vulpix")
+// lista.insert("Snorlax")
 
-lista.printList()
+// lista.printList()

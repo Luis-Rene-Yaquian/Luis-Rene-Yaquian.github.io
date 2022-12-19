@@ -1,36 +1,99 @@
+//reset
 
-baseDatosLogin= JSON.parse(localStorage.getItem("sistema-de-login")) 
+class Nodo{
+    constructor(_value){
+        this.value = _value
+        this.next = null
+    }
+}
+
+class Lista{
+    constructor(){
+        this.head = null
+    }
+
+    //metodos de la lista
+    //insertar
+    insert(_value){
+        var tempo = new Nodo(_value)
+        tempo.next = this.head
+        this.head = tempo
+    }
+    //mostrar 
+    printList(){
+        var temporal = this.head
+        while(temporal!=null){
+            console.log(temporal.value)
+            temporal = temporal.next
+        }
+    }
+}
+
+cargarDatosInicialesBaseDeDatosLogin()
+// localStorage.clear()
+
+
+
+baseDatosLogin = new Lista();
+baseDatosLogin = JSON.parse(localStorage.getItem("sistema-de-login")) 
 
 if (!baseDatosLogin){
     cargarDatosInicialesBaseDeDatosLogin()
+    console.log(baseDatosLogin)
 }
 
 function guardarDatosDeLaBaseDeDatosLogin(){
 localStorage.setItem("sistema-de-login", JSON.stringify(baseDatosLogin))
-
+console.log(baseDatosLogin)
 }
-
 
 
 function cargarDatosInicialesBaseDeDatosLogin(){
 
-baseDatosLogin={
-    1234567890:{
-        contraseña:"abc"
-    },
+// baseDatosLogin={
+//     1234567890:{
+//         contraseña:"abc"
+//     },
 
-    EDD:{
-     dpi: "2654568452521",
-     nombre:"Oscar Armin",
-     contraseña:"123",
-     telefono:" +502 (123) 123-4567"
-    },
+//     EDD:{
+//      dpi: "2654568452521",
+//      nombre:"Oscar Armin",
+//      contraseña:"123",
+//      telefono:" +502 (123) 123-4567"
+//     },
 
-    "123456789":{
-        contraseña:"abc"
-    }
-};
+//     "123456789":{
+//         contraseña:"abc"
+//     }
+// };
+
+    baseDatosLogin = new Lista();
+    baseDatosLogin.insert(
+        {
+            nombre:"primerRegistro",
+            contraseña:"contraPrimero"
+        }
+        );
+
+    baseDatosLogin.insert(
+        {
+            usuario: "EDD",
+            dpi: "2654568452521",
+            contraseña:"123",
+            telefono:" +502 (123) 123-4567"
+        }
+        );
+
+    baseDatosLogin.insert(
+        {
+            nombre:"123456789",
+            contraseña:"abc"
+        }
+        );
+
 }
+
+
 
 
 async function menúBasico(){
@@ -75,11 +138,13 @@ async function registrarNuevoUsuario(){
         showConfirmButton:false,
         html: `
         <input class="swal2-input" placeholder="usuario" id="usuario"> 
+        <input class="swal2-input" placeholder="Nombre Completo" id="Nombre Completo"> 
+        <input class="swal2-input" placeholder="DPI" id="DPI"> 
+        <input class="swal2-input" placeholder="Telefono" id="Telefono"> 
         <input class="swal2-input" placeholder="Contraseña" id="contraseña">
         <button class="swal2-confirm swal2-styled" onclick= opción_opción_registrarNuevousuario=0;Swal.clickConfirm()>
          Crear nuevo usuario
          </button>
-         <br>
          <button class="swal2-confirm swal2-styled" onclick= opción_opción_registrarNuevousuario=1;Swal.close()>
          Cancelar
          </button>
@@ -87,6 +152,9 @@ async function registrarNuevoUsuario(){
         ,
         preConfirm:()=>{
             let usuario=document.getElementById("usuario").value 
+            let nombreCompleto=document.getElementById("nombreCompleto")  
+            let DPI=document.getElementById("DPI").value     
+            let telefono=document.getElementById("telefono")        
             let contraseña=document.getElementById("contraseña").value;
             if(!usuario){
                 Swal.showValidationMessage("No existe un usuario");
@@ -96,10 +164,27 @@ async function registrarNuevoUsuario(){
                 Swal.showValidationMessage("No existe una contraseña");
                 return false;
             }
-            baseDatosLogin[usuario]={}          
-            baseDatosLogin[usuario].contraseña=contraseña 
-            guardarDatosDeLaBaseDeDatosLogin();
-            return true
+
+            if( usuarioRepetido (usuario) ){
+                console.log("Este usuario ya existe")
+                console.log(baseDatosLogin)
+            }
+            else{
+                console.log("aca")
+                nuevoUsuario = {
+                    user: usuario,
+                    nombreCompleto:nombreCompleto,
+                    DPI:DPI,
+                    telefono:telefono,
+                    constrasenia : contraseña
+                }
+                baseDatosLogin.insert(nuevoUsuario)
+                console.log("===========REGISTRO ACTUALIZADO=============")
+                console.log(baseDatosLogin)
+                return true
+            }
+
+            
         
 
         },
@@ -107,9 +192,9 @@ async function registrarNuevoUsuario(){
 
  switch(opción_registrarNuevousuario){
     case 0:
-        menúBasico;
+        break;
         case 1:
-            menúBasico();
+            login();
             default:
             break;
 
@@ -129,7 +214,7 @@ async function login(){
         `
         ,
         preConfirm:()=>{
-            let usuario=document.getElementById("usuario").value 
+            let usuario=document.getElementById("usuario").value;
             let contraseña=document.getElementById("contraseña").value;
             if(!usuario){
                 Swal.showValidationMessage("No existe un usuario");
@@ -158,4 +243,23 @@ async function login(){
     });
 
     return datos;
+}
+
+
+
+function usuarioRepetido(usuario){
+
+
+    var temporal = baseDatosLogin.head
+    while(temporal !=null ){
+
+        console.log(`comparando ${temporal.value.nombre} con ${usuario}`)
+        if( temporal.value.nombre === usuario ){
+            return true;
+        }
+
+        temporal = temporal.next
+    }
+    return false;
+
 }
