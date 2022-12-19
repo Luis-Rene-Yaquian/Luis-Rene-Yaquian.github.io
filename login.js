@@ -1,5 +1,5 @@
 //reset
-
+localStorage.clear()
 class Nodo{
     constructor(_value){
         this.value = _value
@@ -194,7 +194,7 @@ async function registrarNuevoUsuario(){
     case 0:
         break;
         case 1:
-            login();
+            menúBasico();
             default:
             break;
 
